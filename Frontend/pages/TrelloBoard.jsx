@@ -9,41 +9,83 @@ import {
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Droppable from "../components/Droppable";
 import { arrayMove } from "../components/array";
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
-import {getMascotas} from "../data/pet"
+import Timer from "../components/Timer"
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Box } from "@chakra-ui/react";
+import {getMascotasEnProceso, UpdateMascota} from "../data/pet"
 import {getEquipos} from "../data/equipo"
 
 export function TrelloBoard() {
   const [mascotas, setMascotas] = useState([]);
   const [equipos, setEquipos] = useState([]);
   const [items, setItems] = useState({
-    Mascotas: [
-      { id: 1, name: "Perrito 1", description: "Happy dog", status: "en proceso", weight: 5 },
-      { id: 2, name: "Gato1", description: "Cute cat", status: "en proceso", weight: 4 },
-      { id: 3, name: "Perrito 2", description: "Playful dog", status: "en proceso", weight: 10.3 },
-      { id: 4, name: "Gato2", description: "Lazy cat", status: "en proceso", weight: 7 },
-      { id: 5, name: "Gato3", description: "Curious cat", status: "en proceso", weight: 5.2 },
-      { id: 6, name: "Gato4", description: "Elegant cat", status: "en proceso", weight: 4.3 },
-      { id: 7, name: "Dinosaurio", description: "Fierce dinosaur", status: "en proceso", weight: 30 },
-      { id: 8, name: "Conejo", description: "Cute rabbit", status: "en proceso", weight: 1.3 },
-    ],
-    Horno_1: [{ id: 9, name: "Perrito3", description: "Adorable puppy", status: "en proceso", weight: 10 }],
-    Horno_2: [],
-    Horno_3: [],
-    Horno_4: []
+    Mascotas: [],
+    Equipo_1: [],
+    Equipo_2: [],
+    Equipo_3: [],
+    Equipo_4: [],
+    Equipo_5: []
   });
 
-  useEffect(()=> {
-    getMascotas().then(res => {
-      setMascotas(res.data);})
 
-      getEquipos().then(res => {
-      setEquipos(res.data);})
+  console.log(items)
+
+  useEffect(() => {
+    getMascotasEnProceso().then((res) => {
+      const mascotas = res.data;
+      setItems((prevItems) => {
+        const updatedItems = {
+          ...prevItems,
+          Mascotas: mascotas.map((mascota, index) => ({
+            id: mascota._id, // Assign a unique id based on the index
+            name: mascota.name,
+            pet_type: mascota.pet_type, // Assuming pet_type contains the description
+            pet_status: mascota.pet_status, // Assuming pet_status contains the status
+            weight: mascota.weight,
+          })),
+        };
+        return updatedItems;
+      });
+    });
+  
+    getEquipos().then((res) => {
+      setEquipos(res.data);
+    });
+  }, []);
 
 
-  },[]);
-
-  console.log(mascotas,equipos)
+  
+  const handleStatusChange = (columnId) => {
+    setItems((prevItems) => {
+      const updatedItems = {
+        ...prevItems,
+        [columnId]: prevItems[columnId].map((item) => {
+          // Assuming each item has a unique pet ID stored in the 'id' property
+          const petId = item.id;
+  
+          // Update the pet_status property for the specific pet
+          return {
+            ...item,
+            pet_status: "Para entrega",
+          };
+        }),
+      };
+  
+      // Update the pets in the database
+      updatedItems[columnId].forEach((pet) => {
+        UpdateMascota(pet.id, { pet_status: "Para entrega" })
+          .then((response) => {
+            console.log("Mascota actualizada.",response)
+          })
+          .catch((error) => {
+            console.log("Error, mascota no actualizada.",error)
+          });
+      });
+  
+      return updatedItems;
+    });
+  };
+  
+  
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -114,8 +156,8 @@ export function TrelloBoard() {
       setItems((items) => {
         const activeItem = items[activeContainer][activeIndex];
   
-        // If dragging from "Mascotas" to "Horno"
-        if (activeContainer === "Mascotas" && overContainer.startsWith("Horno")) {
+        // If dragging from "Mascotas" to "Equipo"
+        if (activeContainer === "Mascotas" && overContainer.startsWith("Equipo")) {
           return {
             ...items,
             [activeContainer]: items[activeContainer].filter(
@@ -125,8 +167,8 @@ export function TrelloBoard() {
           };
         }
   
-        // If dragging from "Horno" to "Mascotas"
-        if (activeContainer.startsWith("Horno") && overContainer === "Mascotas") {
+        // If dragging from "Equipo" to "Mascotas"
+        if (activeContainer.startsWith("Equipo") && overContainer === "Mascotas") {
           return {
             ...items,
             [activeContainer]: items[activeContainer].filter(
@@ -142,7 +184,11 @@ export function TrelloBoard() {
   };
   
 
-  const containerStyle = { display: "flex" };
+  const containerStyle = { display: "flex" , 
+  paddingBottom: "40px" } ;
+
+
+
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragOver={handleDragOver}>
@@ -151,31 +197,42 @@ export function TrelloBoard() {
           <Droppable id="Mascotas" items={items["Mascotas"]} setItems={setItems} />
           <Tabs isLazy>
             <TabList>
-              <Tab>Horno 1</Tab>
-              <Tab>Horno 2</Tab>
-              <Tab>Horno 3</Tab>
-              <Tab>Horno 4</Tab>
+              <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_1")?.estado ===false}>Equipo 1</Tab>
+              <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_2")?.estado ===false}>Equipo 2</Tab>
+              <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_3")?.estado ===false}>Equipo 3</Tab>
+              <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_4")?.estado ===false}>Equipo 4</Tab>
+              <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_5")?.estado ===false}>Equipo 5</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
-                <div style={containerStyle}>
-                  <Droppable id="Horno_1" items={items["Horno_1"]} setItems={setItems} />
-                </div>
+                <Box style={containerStyle} >
+                  <Droppable id="Equipo_1" items={items["Equipo_1"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos } handleStatusChange={() => handleStatusChange("Equipo_1")} />
+                </Box>
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_1")} />
               </TabPanel>
               <TabPanel>
-                <div style={containerStyle}>
-                  <Droppable id="Horno_2" items={items["Horno_2"]} setItems={setItems} />
-                </div>
+                <Box style={containerStyle}>
+                  <Droppable id="Equipo_2" items={items["Equipo_2"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_2")} />
+                </Box>
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_2")} />
               </TabPanel>
               <TabPanel>
-                <div style={containerStyle}>
-                  <Droppable id="Horno_3" items={items["Horno_3"]} setItems={setItems} />
-                </div>
+                <Box style={containerStyle}>
+                  <Droppable id="Equipo_3" items={items["Equipo_3"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_3")} />
+                </Box>
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_3")} />
               </TabPanel>
               <TabPanel>
-                <div style={containerStyle}>
-                  <Droppable id="Horno_4" items={items["Horno_4"]} setItems={setItems} />
-                </div>
+                <Box style={containerStyle}>
+                  <Droppable id="Equipo_4" items={items["Equipo_4"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_4")} />
+                </Box>
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_4")} />
+              </TabPanel>
+              <TabPanel>
+                <Box style={containerStyle}>
+                  <Droppable id="Equipo_5" items={items["Equipo_5"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_5")} />
+                </Box>
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_5")} />
               </TabPanel>
             </TabPanels>
           </Tabs>

@@ -4,6 +4,12 @@ const getMascotas = async() => {
     const response = await axios.get(`${process.env.SERVIDOR}/pet/all`);
     return response
 }
+
+const getMascotasEnProceso = async() => {
+    const response = await axios.get(`${process.env.SERVIDOR}/pet/allInProcess`);
+    return response
+}
+
 const addMascota = (mascota) => {
     const response = axios.post(`${process.env.SERVIDOR}/pet`, mascota);
     return response
@@ -26,6 +32,7 @@ const findMascota = async (id) => {
 
 module.exports = {
     getMascotas,
+    getMascotasEnProceso,
     findMascota,
     addMascota,
     UpdateMascota,

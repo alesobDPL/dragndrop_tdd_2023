@@ -15,8 +15,7 @@ const createOperario = (req, res) => {
 };
 
 const getOperarios = (_req, res) => {
-  Operario.find({})
-    .then((operarios) => {
+  Operario.find({}).then((operarios) => {
       res.status(200).send(operarios);
     })
     .catch((error) => {

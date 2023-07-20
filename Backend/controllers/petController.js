@@ -27,6 +27,15 @@ const getPets = async (_req, res) => {
   }
 };
 
+const getPetsInProceso = async (_req, res) => {
+  try {
+    const pets = await Pet.find({ pet_status: "En proceso" }).exec();
+    return res.status(200).send(pets);
+  } catch (error) {
+    return res.status(400).send({ message: "Error al mostrar las mascotas", error: error.message });
+  }
+};
+
 const getPet = (req, res) => {
   const ID = req.params.id;
   Pet.findById(ID)
@@ -48,32 +57,26 @@ const delPet = (req, res) => {
   });
 };
 
-const updatePet = (req, res) => {
-  const { id } = req.params;
-  Pet.findByIdAndUpdate(id, req.body, (err, pet) => {
-    if (err) {
-      return res.status(400).send({ message: "Error al actualizar los datos de la mascota" });
-    }
+const updatePet = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const pet = await Pet.findByIdAndUpdate(id, req.body, { new: true }).exec();
+    
     return res.status(200).send({ pet });
-  });
+  } catch (err) {
+    return res.status(400).send({ message: "Error al actualizar los datos de la mascota" });
+  }
 };
 
-const updatePetStatus = (req, res) => {
-  const { id } = req.params;
-  const { withdraw_date, service_status } = req.body;
-  Pet.findByIdAndUpdate(id, { withdraw_date, service_status }, { new: true }, (err, pet) => {
-    if (err) {
-      return res.status(400).send({ message: "Error al actualizar el estado del servicio de la mascota" });
-    }
-    return res.status(200).send({ pet });
-  });
-};
+
+
 
 module.exports = {
   createPet,
   getPets,
+  getPetsInProceso,
   getPet,
   delPet,
-  updatePet,
-  updatePetStatus,
+  updatePet
 };

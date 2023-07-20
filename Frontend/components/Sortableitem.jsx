@@ -10,8 +10,8 @@ const SortableItem = ({ item }) => {
   const itemStyle = {
     transform: CSS.Transform.toString(transform),
     transition,
-    width: 200,
-    height: 40,
+    width: 350,
+    height: 60,
     display: "flex",
     alignItems: "center",
     paddingLeft: 5,
@@ -24,11 +24,12 @@ const SortableItem = ({ item }) => {
     bgColor:"green"
   };
 
-  /*console.log(item)*/
+  
 
   return (
     <Box style={itemStyle} ref={setNodeRef} {...attributes} {...listeners} >
-      {item.name} - {item.description} - {item.status}
+      <div> Nombre: {item.name} - Estado: {item.pet_status}</div>
+      <div>Tipo: {item.pet_type} codigo: {item.id}</div>
     </Box>
   );
 };

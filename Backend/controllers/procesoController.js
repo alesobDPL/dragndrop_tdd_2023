@@ -1,5 +1,5 @@
 const Proceso = require('../models/proceso');
-const Horno = require('../models/horno');
+const Horno = require('../models/equipo');
 
 const createProceso = (req, res) => {
   const { horno, mascota, tiempoEjecucion, cantidadAgua, operario } = req.body;

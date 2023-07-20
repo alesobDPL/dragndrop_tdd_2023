@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import SortableItem from "./SortableItem";
-import { Grid, Badge, Heading, Container, Flex } from "@chakra-ui/react";
-import Timer from "./Timer";
+import { Grid, Badge, Heading, Container, Flex} from "@chakra-ui/react";
 
-const Droppable = ({ id, items, setItems }) => {
+const Droppable = ({ id, items, setItems, equipos, setEquipos }) => {
   const { setNodeRef } = useDroppable({ id });
 
   const droppableStyle = {
@@ -13,20 +12,12 @@ const Droppable = ({ id, items, setItems }) => {
     border: "2px solid black",
     borderRadius: "5px",
     minWidth: 110,
+    width: "650px",
   };
 
-  const handleStatusChange = () => {
-    setItems((prevItems) => {
-      const updatedItems = {
-        ...prevItems,
-        [id]: prevItems[id].map((item) => ({
-          ...item,
-          status: "proceso terminado",
-        })),
-      };
-      return updatedItems;
-    });
-  };
+
+
+
 
   return (
     <>
@@ -37,6 +28,7 @@ const Droppable = ({ id, items, setItems }) => {
               {id}
             </Badge>
           </Heading>
+
         </Flex>
         <SortableContext id={id} items={items} strategy={rectSortingStrategy}>
           <Grid ref={setNodeRef} style={droppableStyle} alignItems="center" justifyContent="center">
@@ -45,7 +37,6 @@ const Droppable = ({ id, items, setItems }) => {
             ))}
           </Grid>
         </SortableContext>
-        <Timer handleStatusChange={handleStatusChange} />
       </Container>
     </>
   );

@@ -92,7 +92,7 @@ const Timer = ({ handleStatusChange }) => {
       <Grid content="center" justifyContent={"center"}>
         <div>
           <Button onClick={handleStartTimer} color="green.400" margin={"10px"}>
-            Iniciar horno
+            Iniciar equipo
           </Button>
         </div>
         <div>

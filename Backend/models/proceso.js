@@ -8,7 +8,7 @@ const ProcesoSchema = new Schema({
   },
   horno: {
     type: Schema.Types.ObjectId,
-    ref: 'horno',
+    ref: 'equipo',
     required: true
   },
   mascota: {
