@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const EquipoSchema = new Schema({
   nombre: {
     type: String,
-    required: true
+    required: true,
+    match: /^[a-zA-Z\s]+$/
   },
   estado: {
     type: Boolean,

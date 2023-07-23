@@ -13,6 +13,31 @@ import Timer from "../components/Timer"
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Box } from "@chakra-ui/react";
 import {getMascotasEnProceso, UpdateMascota} from "../data/pet"
 import {getEquipos} from "../data/equipo"
+import Navbar from "@/components/Navbar";
+import {checkToken} from "@/data/login"
+
+
+export const getServerSideProps = async (context) => {
+  try {
+    const check = await checkToken(context.req.headers.cookie)
+    
+    if (check.status == 200) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false
+        }
+      }
+    }
+  } catch (error) {
+    return {
+      props: {}
+    }
+  }
+}
+
+
+
 
 export function TrelloBoard() {
   const [mascotas, setMascotas] = useState([]);
@@ -191,8 +216,11 @@ export function TrelloBoard() {
 
 
   return (
+   
     <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragOver={handleDragOver}>
+       <Navbar/>
       <div style={containerStyle}>
+        
         <div style={{ display: 'flex' }}>
           <Droppable id="Mascotas" items={items["Mascotas"]} setItems={setItems} />
           <Tabs isLazy>

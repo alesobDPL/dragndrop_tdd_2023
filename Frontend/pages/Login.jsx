@@ -2,7 +2,15 @@ import { useState } from 'react';
 import axios from 'axios';
 import cookies from 'js-cookie';
 import router from 'next/router'
-import { Button,Input,HStack,Heading, Container, useToast as Toast } from '@chakra-ui/react'
+import { Button,Input,HStack,Heading, Container,Image, useToast as Toast, Flex } from '@chakra-ui/react'
+import {checkToken} from "@/data/login"
+
+
+
+
+
+
+
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -56,30 +64,44 @@ const Login = () => {
       // Handle the error and show a message or perform any other necessary actions.
     }
   };
+
+  const containerStyle = { margin: 5} ;
+
   
 
   return (
     <>
-       <Container maxW="container.sm" mt="6%">
+       <Container maxW="container.sm" mt="6%"  >
        <Heading textAlign={"center"}>Inicio de Sesion</Heading>
       <form onSubmit={handleSubmit}>
         <label>
           Usuario:
-          <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required  style={containerStyle}/>
         </label>
         <br />
         <label>
           Contraseña:
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={containerStyle} />
         </label>
         <br />
-        <HStack>
-        <Button colorScheme="whatsapp" type='submit'>Login</Button>
+        <HStack align="center" justify="center">
+        <Button  colorScheme="whatsapp" type='submit'>Login</Button>
         </HStack>
       </form>
-      {message && <p>{message}</p>}
+      <Flex align="center" justify="center">
+        <Image
+                              src="bapets_logo_with_trademark_jorge.png"
+                              alt="Bapets SPA"
+                              w={"35%"}
+                              onClick={() => router.push('/')}
+                              className="pointer"
+                              color={"green.700"}
+
+                          />
+       </Flex>
+       <Button onClick={sendEmail} colorScheme="blue">mandar email</Button>
       </Container>
-      <Button onClick={sendEmail} colorScheme="blue">mandar email</Button>
+
     </>
     
   );

@@ -4,11 +4,13 @@ const Schema = mongoose.Schema;
 const OperarioSchema = new Schema({
   nombre: {
     type: String,
-    required: true
+    required: true,
+    match: /^[a-zA-Z\s]+$/
   },
   apellido: {
     type: String,
-    required: true
+    required: true,
+    match: /^[a-zA-Z\s]+$/
   },
   email: {
     type: String,
