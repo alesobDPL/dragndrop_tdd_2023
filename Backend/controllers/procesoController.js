@@ -1,29 +1,52 @@
 const Proceso = require('../models/proceso');
-const Horno = require('../models/equipo');
+const Equipo = require('../models/equipo');
 
 const createProceso = (req, res) => {
-  const { horno, mascota, tiempoEjecucion, cantidadAgua, operario } = req.body;
-  const newProceso = new Proceso({
-    horno,
-    mascota,
-    tiempoEjecucion,
-    cantidadAgua,
-    operario,
-  });
-  newProceso
-    .save()
-    .then((proceso) => {
-      res.status(200).send(proceso);
+  const { equipo, mascota1, mascota2, tiempoEjecucion, operario } = req.body;
+  console.log("dentro de createProceso en controller: ", equipo, mascota1, mascota2, tiempoEjecucion, operario);
+
+  // Search for the equipo in the database based on its name
+  Equipo.findOne({ nombre: equipo })
+    .then((equipoDoc) => {
+      if (!equipoDoc) {
+        return res.status(400).send({ message: 'Equipo not found' });
+      }
+
+      // Get the equipo ID from the retrieved document
+      const equipoId = equipoDoc._id;
+
+      // Check if mascota2 is provided and set it to null if it's not defined
+      const mascota2Id = mascota2 ? mascota2 : null;
+
+      const newProceso = new Proceso({
+        equipo: equipoId, // Use equipoId instead of equipo
+        mascota1: mascota1,
+        mascota2: mascota2Id,
+        tiempoEjecucion: tiempoEjecucion,
+        operario: operario,
+      });
+
+      newProceso
+        .save()
+        .then((proceso) => {
+          res.status(200).send(proceso);
+        })
+        .catch((error) => {
+          res.status(400).send({ message: 'Error al crear el Proceso', error });
+        });
     })
     .catch((error) => {
-      res.status(400).send({ message: 'Error al crear el Proceso', error });
+      res.status(500).send({ message: 'Error searching for the equipo', error });
     });
 };
 
+
 const getProcesos = (_req, res) => {
   Proceso.find({})
-    .populate('horno')
+    .populate('equipo')
     .populate('operario')
+    .populate('mascota1')
+    .populate('mascota2')
     .exec()
     .then((procesos) => {
       return res.status(200).send(procesos);
@@ -36,7 +59,7 @@ const getProcesos = (_req, res) => {
 const getProceso = (req, res) => {
   const { id } = req.params;
   Proceso.findById(id)
-    .populate('horno')
+    .populate('equipo')
     .populate('operario')
     .exec((err, proceso) => {
       if (err) {
@@ -54,7 +77,7 @@ const updateProceso = async (req, res) => {
     const { id } = req.params;
     const {
       fecha,
-      horno,
+      equipo,
       mascota,
       tiempoEjecucion,
       cantidadAgua,
@@ -65,7 +88,7 @@ const updateProceso = async (req, res) => {
       id,
       {
         fecha,
-        horno,
+        equipo,
         mascota,
         tiempoEjecucion,
         cantidadAgua,
@@ -73,7 +96,7 @@ const updateProceso = async (req, res) => {
       },
       { new: true }
     )
-      .populate('horno')
+      .populate('equipo')
       .populate('operario')
       .exec();
 
@@ -91,7 +114,7 @@ const updateProceso = async (req, res) => {
 const deleteProceso = (req, res) => {
   const { id } = req.params;
   Proceso.findByIdAndDelete(id)
-    .populate('horno')
+    .populate('equipo')
     .populate('operario')
     .exec((err, proceso) => {
       if (err) {

@@ -2,27 +2,27 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ProcesoSchema = new Schema({
-  fecha: {
+  fechaInicio: {
     type: Date,
     default: Date.now
   },
-  horno: {
+  tiempoEjecucion: {
+    type: String,
+    required: true
+  },
+  equipo: {
     type: Schema.Types.ObjectId,
     ref: 'equipo',
     required: true
   },
-  mascota: {
+  mascota1: {
     type: Schema.Types.ObjectId,
     ref: 'pet',
     required: true
   },
-  tiempoEjecucion: {
-    type: Number,
-    required: true
-  },
-  cantidadAgua: {
-    type: Number,
-    required: true
+  mascota2: {
+    type: Schema.Types.ObjectId,
+    ref: 'pet',
   },
   operario: {
     type: Schema.Types.ObjectId,

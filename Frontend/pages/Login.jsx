@@ -4,11 +4,7 @@ import cookies from 'js-cookie';
 import router from 'next/router'
 import { Button,Input,HStack,Heading, Container,Image, useToast as Toast, Flex } from '@chakra-ui/react'
 import {checkToken} from "@/data/login"
-
-
-
-
-
+import {enviarEmail} from "@/data/email"
 
 
 
@@ -49,21 +45,21 @@ const Login = () => {
     }
   };
 
+
+
   const sendEmail = async () => {
     try {
-      const response = await axios.post(`${process.env.SERVIDOR}/EnviarEmail`, {
+      await enviarEmail({
         to: 'manuel.torres2001@alumnos.ubiobio.cl',
-        subject: 'Your Subject Here',
-        html: '<h1>Hello, this is the email content!</h1>',
+        subject: 'Estado de mascota',
+        html: '<h1>Hola, su mascota se encuentra en estado "Para entrega" !</h1>',
       });
-
-      console.log(response.data.message); // 'Email sent successfully'
-      // You can add additional logic or update the UI after the email is sent successfully.
     } catch (error) {
       console.error('Error sending email:', error);
-      // Handle the error and show a message or perform any other necessary actions.
     }
   };
+
+
 
   const containerStyle = { margin: 5} ;
 
@@ -83,7 +79,7 @@ const Login = () => {
           Contraseña:
           <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={containerStyle} />
         </label>
-        <br />
+        <br/>
         <HStack align="center" justify="center">
         <Button  colorScheme="whatsapp" type='submit'>Login</Button>
         </HStack>
@@ -99,7 +95,6 @@ const Login = () => {
 
                           />
        </Flex>
-       <Button onClick={sendEmail} colorScheme="blue">mandar email</Button>
       </Container>
 
     </>

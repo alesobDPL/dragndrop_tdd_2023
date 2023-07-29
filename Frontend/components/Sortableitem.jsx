@@ -3,7 +3,6 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Box } from "@chakra-ui/react";
 
-
 const SortableItem = ({ item }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
 
@@ -13,23 +12,35 @@ const SortableItem = ({ item }) => {
     width: 350,
     height: 60,
     display: "flex",
-    alignItems: "center",
-    paddingLeft: 5,
-    border: "1px solid gray",
-    borderRadius: 5,
-    marginBottom: 5,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "8px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    marginBottom: "5px",
     userSelect: "none",
     cursor: "grab",
     boxSizing: "border-box",
-    bgColor:"green"
+    backgroundColor: "white", // Set the background color to white
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)", // Add a subtle box shadow
   };
 
-  
+  const nameStyle = {
+    fontWeight: "bold",
+  };
+
+  const typeStyle = {
+    color: "#888",
+  };
 
   return (
-    <Box style={itemStyle} ref={setNodeRef} {...attributes} {...listeners} >
-      <div> Nombre: {item.name} - Estado: {item.pet_status}</div>
-      <div>Tipo: {item.pet_type} codigo: {item.id}</div>
+    <Box style={itemStyle} ref={setNodeRef} {...attributes} {...listeners}>
+      <div>
+        <span style={nameStyle}>Nombre:</span> {item.name}
+      </div>
+      <div>
+        <span style={typeStyle}>Tipo:</span> {item.pet_type}
+      </div>
     </Box>
   );
 };

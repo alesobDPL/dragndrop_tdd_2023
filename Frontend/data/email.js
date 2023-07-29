@@ -6,8 +6,4 @@ const enviarEmail = (mailBody) => {
  
 };
 
-
-
-module.exports = {
-    enviarEmail
-}
+export { enviarEmail }

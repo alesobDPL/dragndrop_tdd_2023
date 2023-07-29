@@ -10,9 +10,10 @@ import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Droppable from "../components/Droppable";
 import { arrayMove } from "../components/array";
 import Timer from "../components/Timer"
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Box } from "@chakra-ui/react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, useToast} from "@chakra-ui/react";
 import {getMascotasEnProceso, UpdateMascota} from "../data/pet"
 import {getEquipos} from "../data/equipo"
+import {createLog} from "@/apiCall/proceso"
 import Navbar from "@/components/Navbar";
 import {checkToken} from "@/data/login"
 
@@ -41,6 +42,7 @@ export const getServerSideProps = async (context) => {
 
 export function TrelloBoard() {
   const [mascotas, setMascotas] = useState([]);
+  const [selectedPets, setSelectedPets] = useState([]);
   const [equipos, setEquipos] = useState([]);
   const [items, setItems] = useState({
     Mascotas: [],
@@ -50,9 +52,26 @@ export function TrelloBoard() {
     Equipo_4: [],
     Equipo_5: []
   });
+  const toast = useToast();
 
 
-  console.log(items)
+
+
+
+  const sendEmail = async () => {
+    try {
+      await enviarEmail({
+        to: 'manuel.torres2001@alumnos.ubiobio.cl',
+        subject: 'Estado de mascota',
+        html: '<h1>Hola, su mascota se encuentra en estado "Para entrega" !</h1>',
+      });
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  };
+
+
+ 
 
   useEffect(() => {
     getMascotasEnProceso().then((res) => {
@@ -80,13 +99,24 @@ export function TrelloBoard() {
 
   
   const handleStatusChange = (columnId) => {
+
+  
+    // Check if any pets are selected
+    if (selectedPets.length === 0) {
+      console.log("No pets selected");
+      return;
+    }
+  
+    // Create an array of pet IDs from the selected pets
+    const petIds = selectedPets.map((pet) => pet.id);
+  
     setItems((prevItems) => {
       const updatedItems = {
         ...prevItems,
         [columnId]: prevItems[columnId].map((item) => {
           // Assuming each item has a unique pet ID stored in the 'id' property
           const petId = item.id;
-  
+          
           // Update the pet_status property for the specific pet
           return {
             ...item,
@@ -96,7 +126,7 @@ export function TrelloBoard() {
       };
   
       // Update the pets in the database
-      updatedItems[columnId].forEach((pet) => {
+/*       updatedItems[columnId].forEach((pet) => {
         UpdateMascota(pet.id, { pet_status: "Para entrega" })
           .then((response) => {
             console.log("Mascota actualizada.",response)
@@ -104,11 +134,15 @@ export function TrelloBoard() {
           .catch((error) => {
             console.log("Error, mascota no actualizada.",error)
           });
-      });
+      }); */
+  
+      // Create logs with selected pets
+      createLog(toast,columnId, selectedPets, "10 horas", "64a65ed821a51804a03d8eae");
   
       return updatedItems;
-    });
+    }); 
   };
+  
   
   
 
@@ -183,6 +217,8 @@ export function TrelloBoard() {
   
         // If dragging from "Mascotas" to "Equipo"
         if (activeContainer === "Mascotas" && overContainer.startsWith("Equipo")) {
+          const selectedPet = items[activeContainer][activeIndex];
+          setSelectedPets([selectedPet]); // Set the selected pet as an array
           return {
             ...items,
             [activeContainer]: items[activeContainer].filter(

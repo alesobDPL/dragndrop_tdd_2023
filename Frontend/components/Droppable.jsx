@@ -6,7 +6,6 @@ import { Grid, Badge, Heading, Container, Flex} from "@chakra-ui/react";
 
 const Droppable = ({ id, items, setItems, equipos, setEquipos }) => {
   const { setNodeRef } = useDroppable({ id });
-
   const droppableStyle = {
     padding: "20px 10px",
     border: "2px solid black",
@@ -14,9 +13,6 @@ const Droppable = ({ id, items, setItems, equipos, setEquipos }) => {
     minWidth: 110,
     width: "650px",
   };
-
-
-
 
 
   return (

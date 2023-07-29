@@ -32,9 +32,17 @@ const Navbar = () => {
                                 display={{ base: "none", md: "flex" }}
                                 id="myDIV"
                             >
-                               {/*  <Text className="btnRes pointer" color={"white"} onClick={() => router.push('/')}>
-                                    INICIO
-                                </Text> */}
+                                <Text className="btnRes pointer" color={"white"} onClick={() => router.push('/TrelloBoard')}>
+                                    Equipos
+                                </Text> 
+                                <Text className="btnRes pointer" color={"white"} onClick={() => router.push('/estadoEquipos')}>
+                                    Estado equipos
+                                </Text> 
+                                <Text className="btnRes pointer" color={"white"} onClick={() => router.push('/listaDeProcesos')}>
+                                    Procesos
+                                </Text> 
+
+                                
 
                             </HStack>
                         </HStack>
@@ -81,9 +89,9 @@ const Navbar = () => {
                                         textShadow: "#FC0 1px 0 10px",
                                         transform: "scale(1.2)",
                                     }}>
-                                    <a href="/inicio">
+                                    <a href="/ListaDeProcesos">
                                         {" "}
-                                        <b>Inicio</b>
+                                        <b>Procesos</b>
                                     </a>
                                 </Button>
                                 <Button onClick={isOpen ? onClose : onOpen}

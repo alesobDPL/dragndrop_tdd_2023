@@ -31,8 +31,8 @@ app.use('/api', equipoRoutes);
 app.use('/api', operarioRoutes);
 app.use('/api', procesoRoutes);
 app.use('/api', petRoutes);
-app.use('/api/', userRoutes)
-app.use('/api/',emailRoutes)
+app.use('/api', userRoutes)
+app.use('/api', emailRoutes)
 
 
 mongoose

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NumberSelector from "./NumberSelector";
 import { Stack, Button, Grid } from "@chakra-ui/react";
-import axios from 'axios';
 
 const Timer = ({ handleStatusChange }) => {
   const [hours, setHours] = useState(0);
@@ -13,21 +12,6 @@ const Timer = ({ handleStatusChange }) => {
     setIsRunning(true);
   };
 
-  const sendEmail = async () => {
-    try {
-      const response = await axios.post(`${process.env.SERVIDOR}/EnviarEmail`, {
-        to: 'manuel.torres2001@alumnos.ubiobio.cl',
-        subject: 'Estado de mascota',
-        html: '<h1>Hola, su mascota se encuentra en estado "Para entrega" !</h1>',
-      });
-
-      console.log(response.data.message); // 'Email sent successfully'
-      // You can add additional logic or update the UI after the email is sent successfully.
-    } catch (error) {
-      console.error('Error sending email:', error);
-      // Handle the error and show a message or perform any other necessary actions.
-    }
-  };
 
   useEffect(() => {
     let interval = null;
@@ -38,8 +22,7 @@ const Timer = ({ handleStatusChange }) => {
           if (minutes === 0) {
             if (hours === 0) {
               setIsRunning(false);
-              handleStatusChange(); // Invoke the handleStatusChange function
-              sendEmail();
+              handleStatusChange();
               return;
             } else {
               setHours((prevHours) => prevHours - 1);
@@ -101,7 +84,7 @@ const Timer = ({ handleStatusChange }) => {
           <NumberSelector
             defaultValue={seconds}
             min={0}
-            max={60}
+            max={59}
             handleChange={handleSecondChange}
           />
         </div>
@@ -114,7 +97,7 @@ const Timer = ({ handleStatusChange }) => {
           </Button>
         </div>
         <div>
-          <strong>Tiempo:</strong> {hours.toString().padStart(2, "0")}:
+          <strong>Tiempo:</strong> {hours.toString().padStart(2,"0")}:
           {minutes.toString().padStart(2, "0")}:{seconds.toString().padStart(2, "0")}
         </div>
       </Grid>
