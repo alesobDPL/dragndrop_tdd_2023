@@ -17,17 +17,24 @@ import {createLog} from "@/apiCall/proceso"
 import Navbar from "@/components/Navbar";
 import {checkToken} from "@/data/login"
 
-
 export const getServerSideProps = async (context) => {
+  const token = context.req.cookies.token;
+  
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false
+      }
+    };
+  }
+
   try {
-    const check = await checkToken(context.req.headers.cookie)
+    const check = await checkToken(token);
     
-    if (check.status == 200) {
+    if (check.status === 200) {
       return {
-        redirect: {
-          destination: "/",
-          permanent: false
-        }
+        props: {}
       }
     }
   } catch (error) {
@@ -35,7 +42,8 @@ export const getServerSideProps = async (context) => {
       props: {}
     }
   }
-}
+};
+
 
 
 
@@ -53,7 +61,10 @@ export function TrelloBoard() {
     Equipo_5: []
   });
   const toast = useToast();
+  const capacidadMaxima = 2;
 
+
+  
 
 
 
@@ -99,11 +110,15 @@ export function TrelloBoard() {
 
   
   const handleStatusChange = (columnId) => {
-
-  
     // Check if any pets are selected
     if (selectedPets.length === 0) {
-      console.log("No pets selected");
+      toast({
+        title: "Error",
+        description: 'No hay mascotas seleccionadas.',
+        status: "warning",
+        duration: 2000,
+        isClosable: true
+      })
       return;
     }
   
@@ -155,23 +170,32 @@ export function TrelloBoard() {
 
   const handleDragOver = ({ over, active }) => {
     const overId = over?.id;
-
+  
     if (!overId) {
       return;
     }
-
+  
     const activeContainer = active.data.current.sortable.containerId;
     const overContainer = over.data.current?.sortable.containerId;
-
+  
     if (!overContainer) {
       return;
     }
-
+  
     if (activeContainer !== overContainer) {
+      // Check if the overContainer is an "equipo_x" column
+      if (overContainer.startsWith("Equipo")) {
+        // Check if the overContainer already contains an item
+        if (items[overContainer].length >= capacidadMaxima) {
+          // Prevent the default behavior of the drag event.
+          return;
+        }
+      }
+  
       setItems((items) => {
         const activeIndex = active.data.current.sortable.index;
         const activeItem = items[activeContainer][activeIndex];
-
+  
         const newItems = {
           ...items,
           [activeContainer]: items[activeContainer].filter(
@@ -179,12 +203,12 @@ export function TrelloBoard() {
           ),
           [overContainer]: [activeItem, ...items[overContainer]],
         };
-
+  
         return newItems;
       });
     }
   };
-
+  
   const handleDragEnd = ({ active, over }) => {
     if (!over) {
       return;
@@ -213,6 +237,82 @@ export function TrelloBoard() {
       const activeIndex = active.data.current.sortable.index;
   
       setItems((items) => {
+        let maxWeight = 0;
+    
+
+
+
+        // Check if the overContainer is an "equipo_x" column
+        if (overContainer.startsWith("Equipo")) {
+
+        // Check if the overContainer already contains 2 item(or the number passed throught the variable)
+         if (items[overContainer].length >= capacidadMaxima) {
+             toast({
+                title: "Error",
+                description: `Ya existen 2 mascotas en el ${overContainer} para entrar a proceso.`,
+                status: "warning",
+                duration: 2000,
+                isClosable: true})
+                return items;
+                    }
+
+        else{
+
+      // Get the maximum weight for the overContainer
+      if(overContainer==="Equipo_1"){
+        maxWeight = process.env.PESO_EQUIPO_1
+      }else if(overContainer==="Equipo_2"){
+        maxWeight = process.env.PESO_EQUIPO_2
+      }else if(overContainer==="Equipo_3"){
+        maxWeight = process.env.PESO_EQUIPO_3
+      }else if(overContainer==="Equipo_4"){
+        maxWeight = process.env.PESO_EQUIPO_4
+      }else if(overContainer==="Equipo_5"){
+        maxWeight = process.env.PESO_EQUIPO_5
+      }
+      
+      const activeItem = items[activeContainer][activeIndex];
+      
+      let itemWeight = items[overContainer].reduce((acc, item) => {
+        if (item) {
+          acc += item.weight;
+        }
+        return acc;
+      }, 0);
+
+      itemWeight = itemWeight + activeItem.weight
+
+    
+      // Check if the total weight of the items in the overContainer is greater than the maximum weight
+      if (itemWeight >= maxWeight) {
+        // Show a warning message
+        alert(
+          `The total weight of the items in this column cannot exceed ${maxWeight}kg.`
+        );
+
+        // Ask the user if they want to add the Mascota to the column anyway
+        const confirm = window.confirm(
+          `Do you want to add the Mascota anyway? This will exceed the maximum weight.`
+        );
+        if (confirm) {
+          // Add the Mascota to the column
+          return {
+            ...items,
+            [activeContainer]: items[activeContainer].filter(
+              (item, index) => index !== activeIndex
+            ),
+            [overContainer]: [...items[overContainer], activeItem],
+          };
+        } else {
+          // Do not add the Mascota to the column
+          return items;
+        }
+      } 
+    }
+
+          
+        }
+  
         const activeItem = items[activeContainer][activeIndex];
   
         // If dragging from "Mascotas" to "Equipo"
@@ -243,6 +343,7 @@ export function TrelloBoard() {
       });
     }
   };
+  
   
 
   const containerStyle = { display: "flex" , 

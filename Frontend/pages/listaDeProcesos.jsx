@@ -3,6 +3,36 @@ import { Box, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import Navbar from "@/components/Navbar";
 import { getProcesos } from "@/data/proceso";
 
+
+export const getServerSideProps = async (context) => {
+  const token = context.req.cookies.token;
+  
+  console.log("mi token en trelloboard",token)
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false
+      }
+    };
+  }
+
+  try {
+    const check = await checkToken(token);
+    
+    if (check.status === 200) {
+      return {
+        props: {}
+      }
+    }
+  } catch (error) {
+    return {
+      props: {}
+    }
+  }
+};
+
 const ProcesosList = () => {
   const [procesos, setProcesos] = useState([]);
 

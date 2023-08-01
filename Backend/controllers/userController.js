@@ -43,14 +43,14 @@ const login = async (req, res) => {
       if (!isPasswordValid) {
         return res.status(401).json({ message: 'Invalid password' });
       }
-  
-      const token = createToken(user);
-      res.cookie('token', token, { httpOnly: true });
-      res.status(200).json({ message: 'Login successful', user });
+      
+      res.cookie('token',  createToken(user), { httpOnly: true });
+      res.status(200).json({ message: 'Login successful', token:createToken(user),user:user.role });
     } catch (error) {
       res.status(500).json({ message: 'Error during login', error });
     }
   };
+
 
 const logout = (req, res) => {
     res.clearCookie('token');

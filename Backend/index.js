@@ -1,12 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const app = express();
+const cookieParser = require('cookie-parser')
 
 require('dotenv').config()
 
 app.use(express.json());
+
+app.use(cookieParser())
 
 app.options('*', cors());
 app.use(
@@ -16,6 +18,8 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+
+
 
 // Rutas exportadas
 const equipoRoutes = require('./routes/equipoRoutes');
@@ -46,5 +50,10 @@ mongoose
   .catch((error) => {
     console.error('Error al conectar con la base de datos:', error);
   });
+
+
+
+  
+
 
 

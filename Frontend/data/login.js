@@ -11,12 +11,20 @@ const logout = async () => {
 }
 
 const checkToken = async (token) => {
+    
     const response = await axios.get(`${process.env.SERVIDOR}/checkToken`, { headers: { cookie: token } })
+    return response
+}
+
+const checkTokenAdmin = async (token) => {
+    
+    const response = await axios.get(`${process.env.SERVIDOR}/checkTokenAdmin`, { headers: { cookie: token } })
     return response
 }
 
 module.exports = {
     login,
     logout,
-    checkToken
+    checkToken,
+    checkTokenAdmin
 }

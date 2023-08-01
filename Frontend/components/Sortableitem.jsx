@@ -10,14 +10,14 @@ const SortableItem = ({ item }) => {
     transform: CSS.Transform.toString(transform),
     transition,
     width: 350,
-    height: 60,
+    height: 70,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     padding: "8px",
     border: "1px solid #ccc",
-    borderRadius: "5px",
-    marginBottom: "5px",
+    borderRadius: "2px",
+    marginBottom: "2px",
     userSelect: "none",
     cursor: "grab",
     boxSizing: "border-box",
@@ -40,9 +40,10 @@ const SortableItem = ({ item }) => {
       </div>
       <div>
         <span style={typeStyle}>Tipo:</span> {item.pet_type}
+        <span style={typeStyle}> Peso:</span> {item.weight}
       </div>
     </Box>
   );
 };
 
-export default SortableItem;
+export default SortableItem; 

@@ -25,7 +25,7 @@ const Login = () => {
         cookies.set('token', response.data.token, { expires: 1, path: '/' });
         toast({
           title: "Bienvenido!",
-          description: 'Has iniciado sesion',
+          description: 'Has iniciado sesión',
           status: "success",
           duration: 2000,
           isClosable: true
@@ -68,7 +68,7 @@ const Login = () => {
   return (
     <>
        <Container maxW="container.sm" mt="6%"  >
-       <Heading textAlign={"center"}>Inicio de Sesion</Heading>
+       <Heading textAlign={"center"}>Inicio de Sesión</Heading>
       <form onSubmit={handleSubmit}>
         <label>
           Usuario:

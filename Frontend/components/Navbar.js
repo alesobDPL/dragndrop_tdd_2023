@@ -1,6 +1,7 @@
 import { Box, Flex, Button, Stack, Show, HStack, useDisclosure, IconButton, Heading, useToast as Toast, Text, Image} from "@chakra-ui/react";
 import { MoonIcon, SunIcon, HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import router from "next/router";
+import {logout} from "@/data/login"
 import axios from "axios";
 import Cookies from 'js-cookie'
 
@@ -17,7 +18,7 @@ const Navbar = () => {
                             src="bapets_logo_with_trademark_jorge.png"
                             alt="Bapets SPA"
                             w={400}
-                            onClick={() => router.push('/')}
+                            onClick={() => router.push('/TrelloBoard')}
                             className="pointer"
                             color={"green.700"}
                         />
@@ -49,6 +50,7 @@ const Navbar = () => {
                     </Flex>
                     <HStack as={"nav"} id="myDIV" display={{ base: "none", md: "flex" }}>
                         <Button className="btnRes" as={"nav"} onClick={() => {
+                            
                             axios.post(`${process.env.SERVIDOR}/logout`)
                             Cookies.remove("token")
                             router.replace('/')

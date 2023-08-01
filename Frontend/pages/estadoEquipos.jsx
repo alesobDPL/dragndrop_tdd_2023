@@ -1,7 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { Switch, Box, Flex, Heading, Text, useToast } from "@chakra-ui/react";
 import Navbar from "@/components/Navbar";
-import { getEquipos, UpdateEquipo } from "../data/equipo";
+import { getEquipos, UpdateEquipo,checkTokenAdmin } from "../data/equipo";
+
+export const getServerSideProps = async (context) => {
+  const token = context.req.cookies.token;
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false
+      }
+    };
+  }
+
+  try {
+    const check = await checkTokenAdmin(token);
+    
+    if (check.status === 200) {
+      return {
+        props: {}
+      };
+    }
+  } catch (error) {
+    const referer = context.req.headers.referer || "/";
+    return {
+      redirect: {
+        destination: referer,
+        permanent: false
+      }
+    };
+  }
+};
+
 
 
 const EquiposList = () => {
