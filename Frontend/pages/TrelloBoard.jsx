@@ -38,6 +38,7 @@ export const getServerSideProps = async (context) => {
       }
     }
   } catch (error) {
+    console.log("entro error")
     return {
       props: {}
     }
@@ -366,7 +367,6 @@ export function TrelloBoard() {
               <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_2")?.estado ===false}>Equipo 2</Tab>
               <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_3")?.estado ===false}>Equipo 3</Tab>
               <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_4")?.estado ===false}>Equipo 4</Tab>
-              <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_5")?.estado ===false}>Equipo 5</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
@@ -393,12 +393,7 @@ export function TrelloBoard() {
                 </Box>
                 <Timer handleStatusChange={() => handleStatusChange("Equipo_4")} />
               </TabPanel>
-              <TabPanel>
-                <Box style={containerStyle}>
-                  <Droppable id="Equipo_5" items={items["Equipo_5"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_5")} />
-                </Box>
-                <Timer handleStatusChange={() => handleStatusChange("Equipo_5")} />
-              </TabPanel>
+
             </TabPanels>
           </Tabs>
         </div>

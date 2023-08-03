@@ -10,6 +10,6 @@ api.get('/user/search/:id', userController.getUser)
 api.delete('/user/delete/:id', userController.delUser)
 api.post('/login', userController.login)
 api.get('/checkToken', auth, userController.checkToken)
-api.get('/checkTokenAdmin', authAdmin, userController.checkToken)
+api.get('/checkTokenAdmin', authAdmin, userController.checkTokenAdmin)
 api.post('/logout', userController.logout)
 module.exports = api

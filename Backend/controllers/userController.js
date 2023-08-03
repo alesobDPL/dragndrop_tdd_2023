@@ -31,6 +31,12 @@ const checkToken = (req, res) => {
     return res.status(200).send({message: 'Token valido'})
 }
 
+const checkTokenAdmin = (req, res) => {
+    return res.status(200).send({message: 'Token valido'})
+}
+
+
+
 const login = async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -99,5 +105,6 @@ module.exports = {
     delUser,
     login,
     checkToken,
+    checkTokenAdmin,
     logout
 };

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Switch, Box, Flex, Heading, Text, useToast } from "@chakra-ui/react";
 import Navbar from "@/components/Navbar";
-import { getEquipos, UpdateEquipo,checkTokenAdmin } from "../data/equipo";
+import { getEquipos, UpdateEquipo } from "../data/equipo";
+import {checkTokenAdmin} from "@/data/login"
+import axios from "axios";
 
 export const getServerSideProps = async (context) => {
   const token = context.req.cookies.token;
@@ -9,27 +11,27 @@ export const getServerSideProps = async (context) => {
   if (!token) {
     return {
       redirect: {
-        destination: "/",
-        permanent: false
-      }
+        destination: '/',
+        permanent: false,
+      },
     };
   }
 
   try {
     const check = await checkTokenAdmin(token);
-    
+
     if (check.status === 200) {
       return {
-        props: {}
+        props: {},
       };
     }
   } catch (error) {
-    const referer = context.req.headers.referer || "/";
+    const referer = context.req.headers.referer || '/';
     return {
       redirect: {
         destination: referer,
-        permanent: false
-      }
+        permanent: false,
+      },
     };
   }
 };

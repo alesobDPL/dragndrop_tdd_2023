@@ -107,38 +107,7 @@ const Navbar = () => {
                                     </a>
                                 </Button>
 
-                                <Button onClick={isOpen ? onClose : onOpen}
-                                    _hover={{
-                                        textShadow: "#FC0 1px 0 10px",
-                                        transform: "scale(1.2)",
-                                    }}>
-                                    <a href="/clientes">
-                                        {" "}
-                                        <b>Clientes</b>
-                                    </a>
-                                </Button>
-                                <Button onClick={isOpen ? onClose : onOpen}
-                                    _hover={{
-                                        textShadow: "#FC0 1px 0 10px",
-                                        transform: "scale(1.2)",
-                                    }}>
-                                    <a href="/mascotas">
-                                        {" "}
-                                        <b>Mascotas</b>
-                                    </a>
-                                </Button>
-                                <Button
-                                    onClick={isOpen ? onClose : onOpen}
-                                    _hover={{
-                                        textShadow: "#FC0 1px 0 10px",
-                                        transform: "scale(1.2)",
-                                    }}
-                                >
-                                    <a href="/anfora">
-                                        {" "}
-                                        <b>Anforas</b>
-                                    </a>
-                                </Button>
+
                                 <Button onClick={() => {
                                     axios.post(`${process.env.SERVIDOR}/logout`)
                                     Cookies.remove("token")

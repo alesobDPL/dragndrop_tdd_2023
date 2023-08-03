@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Box, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import Navbar from "@/components/Navbar";
 import { getProcesos } from "@/data/proceso";
+import { getEquipos, UpdateEquipo } from "../data/equipo";
+import {checkToken} from "@/data/login"
 
 
 export const getServerSideProps = async (context) => {
   const token = context.req.cookies.token;
   
-  console.log("mi token en trelloboard",token)
 
   if (!token) {
     return {
@@ -18,6 +19,7 @@ export const getServerSideProps = async (context) => {
     };
   }
 
+ 
   try {
     const check = await checkToken(token);
     

@@ -11,16 +11,24 @@ const logout = async () => {
 }
 
 const checkToken = async (token) => {
-    
-    const response = await axios.get(`${process.env.SERVIDOR}/checkToken`, { headers: { cookie: token } })
-    return response
-}
+    const response = await axios.get(`${process.env.SERVIDOR}/checkToken`, {
+      headers: {
+        Cookie: `token=${token}`, // Set the token as a cookie
+      },
+    });
+    return response;
+  };
 
-const checkTokenAdmin = async (token) => {
-    
-    const response = await axios.get(`${process.env.SERVIDOR}/checkTokenAdmin`, { headers: { cookie: token } })
-    return response
-}
+  const checkTokenAdmin = async (token) => {
+    const response = await axios.get(`${process.env.SERVIDOR}/checkTokenAdmin`, {
+      headers: {
+        Cookie: `token=${token}`,
+      },
+      withCredentials: true, // Add this line
+    });
+    return response;
+  };
+  
 
 module.exports = {
     login,
