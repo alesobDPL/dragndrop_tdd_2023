@@ -1,7 +1,7 @@
 
 {
   "rules": {
-    "extends": "next/core-web-vitals"
+    
   },
   "overrides": [
     {
