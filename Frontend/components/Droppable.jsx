@@ -2,7 +2,6 @@ import React from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import SortableItem from "./Sortableitem";
-import Timer from "../components/Timer"
 import { Grid, Badge, Heading, Container, Flex} from "@chakra-ui/react";
 
 
