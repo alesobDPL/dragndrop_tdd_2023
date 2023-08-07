@@ -20,8 +20,7 @@ const PetSchema = new Schema({
   pet_type: {
     type: String,
     required: true,
-    
-    // You can adjust the regular expression based on your specific pet types if needed
+   
   },
   withdraw_date: {
     type: Date,
@@ -36,6 +35,10 @@ const PetSchema = new Schema({
     required: true,
     default: "Preparacion",
     enum: ['Preparacion', 'En proceso', 'Para entrega', 'En ruta', "Entregado"],
+  },
+  dueñoEmail:{
+    type: String,
+    required: true,
   }
 });
 

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import SortableItem from "./SortableItem";
+import Timer from "../components/Timer"
 import { Grid, Badge, Heading, Container, Flex} from "@chakra-ui/react";
+
 
 const Droppable = ({ id, items, setItems, equipos, setEquipos }) => {
   const { setNodeRef } = useDroppable({ id });
@@ -33,7 +35,9 @@ const Droppable = ({ id, items, setItems, equipos, setEquipos }) => {
             ))}
           </Grid>
         </SortableContext>
+        
       </Container>
+      
     </>
   );
 };

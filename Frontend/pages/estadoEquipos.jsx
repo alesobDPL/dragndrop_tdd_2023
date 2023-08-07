@@ -3,7 +3,6 @@ import { Switch, Box, Flex, Heading, Text, useToast } from "@chakra-ui/react";
 import Navbar from "@/components/Navbar";
 import { getEquipos, UpdateEquipo } from "../data/equipo";
 import {checkTokenAdmin} from "@/data/login"
-import axios from "axios";
 
 export const getServerSideProps = async (context) => {
   const token = context.req.cookies.token;

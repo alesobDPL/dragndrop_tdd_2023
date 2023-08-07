@@ -3,13 +3,16 @@ import {addProceso} from "@/data/proceso"
 export const createLog = async (toast,equipoID, mascotaIDs,
                                 tiempoEjec,operarioID) => {
 
+    console.log("validando campos",equipoID, mascotaIDs,
+      tiempoEjec,operarioID)
+
           
 const response = await  addProceso({
   tiempoEjecucion:tiempoEjec,
   mascota1:mascotaIDs[0].id,
   mascota2:mascotaIDs[1]?.id,
   equipo:equipoID,
-  operario:operarioID
+  user:operarioID
 })
 
 if(response.status == 200){

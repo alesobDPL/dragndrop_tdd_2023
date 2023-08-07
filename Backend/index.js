@@ -23,7 +23,6 @@ app.use(
 
 // Rutas exportadas
 const equipoRoutes = require('./routes/equipoRoutes');
-const operarioRoutes = require('./routes/operarioRoutes');
 const procesoRoutes = require('./routes/procesoRoutes');
 const petRoutes = require('./routes/petRoutes');
 const userRoutes = require('./routes/userRoutes')
@@ -32,7 +31,6 @@ const emailRoutes = require('./routes/emailRoutes')
 
 // Uso de rutas
 app.use('/api', equipoRoutes);
-app.use('/api', operarioRoutes);
 app.use('/api', procesoRoutes);
 app.use('/api', petRoutes);
 app.use('/api', userRoutes)

@@ -37,6 +37,7 @@ export const getServerSideProps = async (context) => {
 
 const ProcesosList = () => {
   const [procesos, setProcesos] = useState([]);
+  console.log("los procesos",procesos)
 
   useEffect(() => {
     const fetchProcesos = async () => {
@@ -76,7 +77,7 @@ const ProcesosList = () => {
                 <Td>{proceso.equipo.nombre}</Td>
                 <Td>{proceso.mascota1.name}</Td>
                 <Td>{proceso.mascota2 ? proceso.mascota2.name : " - "}</Td>
-                <Td>{proceso.operario.nombre} {proceso.operario.apellido}</Td>
+                <Td>{proceso.user.username}</Td>
               </Tr>
             ))}
           </Tbody>

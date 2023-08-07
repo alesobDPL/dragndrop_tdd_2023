@@ -24,9 +24,9 @@ const ProcesoSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'pet',
   },
-  operario: {
+  user: {
     type: Schema.Types.ObjectId,
-    ref: 'operario',
+    ref: 'user',
     required: true
   }
 });

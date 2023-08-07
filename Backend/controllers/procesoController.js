@@ -2,8 +2,8 @@ const Proceso = require('../models/proceso');
 const Equipo = require('../models/equipo');
 
 const createProceso = (req, res) => {
-  const { equipo, mascota1, mascota2, tiempoEjecucion, operario } = req.body;
-  console.log("dentro de createProceso en controller: ", equipo, mascota1, mascota2, tiempoEjecucion, operario);
+  const { equipo, mascota1, mascota2, tiempoEjecucion, user } = req.body;
+  console.log("dentro de createProceso en controller: ", equipo, mascota1, mascota2, tiempoEjecucion, user);
 
   // Search for the equipo in the database based on its name
   Equipo.findOne({ nombre: equipo })
@@ -23,7 +23,7 @@ const createProceso = (req, res) => {
         mascota1: mascota1,
         mascota2: mascota2Id,
         tiempoEjecucion: tiempoEjecucion,
-        operario: operario,
+        user: user,
       });
 
       newProceso
@@ -44,7 +44,7 @@ const createProceso = (req, res) => {
 const getProcesos = (_req, res) => {
   Proceso.find({})
     .populate('equipo')
-    .populate('operario')
+    .populate('user')
     .populate('mascota1')
     .populate('mascota2')
     .exec()
@@ -60,7 +60,7 @@ const getProceso = (req, res) => {
   const { id } = req.params;
   Proceso.findById(id)
     .populate('equipo')
-    .populate('operario')
+    .populate('user')
     .exec((err, proceso) => {
       if (err) {
         return res.status(400).send({ message: "Error al obtener el Proceso" });
@@ -97,7 +97,7 @@ const updateProceso = async (req, res) => {
       { new: true }
     )
       .populate('equipo')
-      .populate('operario')
+      .populate('user')
       .exec();
 
     if (!proceso) {
@@ -115,7 +115,7 @@ const deleteProceso = (req, res) => {
   const { id } = req.params;
   Proceso.findByIdAndDelete(id)
     .populate('equipo')
-    .populate('operario')
+    .populate('user')
     .exec((err, proceso) => {
       if (err) {
         return res.status(400).send({ message: "Error al eliminar el Proceso" });

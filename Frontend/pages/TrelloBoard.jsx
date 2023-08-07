@@ -16,6 +16,7 @@ import {getEquipos} from "../data/equipo"
 import {createLog} from "@/apiCall/proceso"
 import Navbar from "@/components/Navbar";
 import {checkToken} from "@/data/login"
+import jwt from 'jsonwebtoken';
 
 export const getServerSideProps = async (context) => {
   const token = context.req.cookies.token;
@@ -30,26 +31,23 @@ export const getServerSideProps = async (context) => {
   }
 
   try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET); // Replace with your actual secret key
+    const userData = decodedToken; // Use decoded token data as needed
     const check = await checkToken(token);
     
     if (check.status === 200) {
       return {
-        props: {}
+        props: {data:userData}
       }
     }
   } catch (error) {
-    console.log("entro error")
     return {
       props: {}
     }
   }
 };
 
-
-
-
-
-export function TrelloBoard() {
+export function TrelloBoard({data}) {
   const [mascotas, setMascotas] = useState([]);
   const [selectedPets, setSelectedPets] = useState([]);
   const [equipos, setEquipos] = useState([]);
@@ -63,17 +61,14 @@ export function TrelloBoard() {
   });
   const toast = useToast();
   const capacidadMaxima = 2;
-
-
-  
-
+  console.log("data",data)
 
 
 
-  const sendEmail = async () => {
+  const sendEmail = async ({to}) => {
     try {
       await enviarEmail({
-        to: 'manuel.torres2001@alumnos.ubiobio.cl',
+        to: {to},
         subject: 'Estado de mascota',
         html: '<h1>Hola, su mascota se encuentra en estado "Para entrega" !</h1>',
       });
@@ -153,7 +148,8 @@ export function TrelloBoard() {
       }); */
   
       // Create logs with selected pets
-      createLog(toast,columnId, selectedPets, "10 horas", "64a65ed821a51804a03d8eae");
+      console.log("antes de createLog",columnId, petIds, "10 horas", data.sub)
+      createLog(toast,columnId, selectedPets, "10 horas", data.sub);
   
       return updatedItems;
     }); 
@@ -331,6 +327,7 @@ export function TrelloBoard() {
   
         // If dragging from "Equipo" to "Mascotas"
         if (activeContainer.startsWith("Equipo") && overContainer === "Mascotas") {
+          setSelectedPets(items[overContainer]);
           return {
             ...items,
             [activeContainer]: items[activeContainer].filter(
@@ -374,23 +371,27 @@ export function TrelloBoard() {
                   <Droppable id="Equipo_1" items={items["Equipo_1"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos } handleStatusChange={() => handleStatusChange("Equipo_1")} />
                 </Box>
                 <Timer handleStatusChange={() => handleStatusChange("Equipo_1")} />
+               
               </TabPanel>
               <TabPanel>
                 <Box style={containerStyle}>
                   <Droppable id="Equipo_2" items={items["Equipo_2"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_2")} />
                 </Box>
                 <Timer handleStatusChange={() => handleStatusChange("Equipo_2")} />
+               
               </TabPanel>
               <TabPanel>
                 <Box style={containerStyle}>
                   <Droppable id="Equipo_3" items={items["Equipo_3"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_3")} />
                 </Box>
                 <Timer handleStatusChange={() => handleStatusChange("Equipo_3")} />
+               
               </TabPanel>
               <TabPanel>
                 <Box style={containerStyle}>
                   <Droppable id="Equipo_4" items={items["Equipo_4"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_4")} />
                 </Box>
+
                 <Timer handleStatusChange={() => handleStatusChange("Equipo_4")} />
               </TabPanel>
 

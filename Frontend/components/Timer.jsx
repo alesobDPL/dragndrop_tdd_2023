@@ -8,6 +8,9 @@ const Timer = ({ handleStatusChange }) => {
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
+
+  console.log("hora",hours,minutes,seconds)
+
   const handleStartTimer = () => {
     setIsRunning(true);
   };
