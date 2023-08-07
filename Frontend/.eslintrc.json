@@ -1,11 +1,9 @@
-
 {
-  "rules": {
-    
-  },
+  "extends": "next/core-web-vitals",
+
   "overrides": [
     {
-      "files": ["*.jsx"], // Adjust this based on your file patterns
+      "files": ["**/NumberSelector.jsx"], // Adjust the path as needed
       "rules": {
         "react/no-children-prop": "off"
       }
