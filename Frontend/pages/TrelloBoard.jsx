@@ -61,7 +61,6 @@ export function TrelloBoard({data}) {
   });
   const toast = useToast();
   const capacidadMaxima = 2;
-  console.log("data",data)
 
 
 
