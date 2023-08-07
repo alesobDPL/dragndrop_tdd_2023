@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NumberSelector from "./NumberSelector";
 import { Stack, Button, Grid } from "@chakra-ui/react";
-/* eslint-disable react/no-children-prop */
+
 
 const Timer = ({ handleStatusChange }) => {
   const [hours, setHours] = useState(0);
