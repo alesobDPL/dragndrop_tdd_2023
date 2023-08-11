@@ -54,7 +54,7 @@ export function TrelloBoard({data}) {
     Equipo_5: []
   });
   const toast = useToast();
-  
+  const capacidadMaxima = 2;
   const [tiempoEquipo_1, setTiempoEquipo_1] = useState("00:00:00");
   const [tiempoEquipo_2, setTiempoEquipo_2] = useState("00:00:00");
   const [tiempoEquipo_3, setTiempoEquipo_3] = useState("00:00:00");
@@ -69,16 +69,9 @@ export function TrelloBoard({data}) {
     Equipo_5 : tiempoEquipo_5
   };
 
-  const [dndStatus, setDndStatus] = useState({
-    Equipo_1: true,
-    Equipo_2: true,
-    Equipo_3: false,
-    Equipo_4: false,
-    Equipo_5: false,
-  })
-  
 
-  const capacidadMaxima = 2;
+
+
 
 
   useEffect(() => {
@@ -369,7 +362,7 @@ export function TrelloBoard({data}) {
             <TabPanels>
               <TabPanel>
                 <Box style={containerStyle} >
-                  <Droppable id="Equipo_1" items={items["Equipo_1"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos } handleStatusChange={() => handleStatusChange("Equipo_1")} isDroppable={dndStatus["Equipo_1"]} />
+                  <Droppable id="Equipo_1" items={items["Equipo_1"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos } handleStatusChange={() => handleStatusChange("Equipo_1")}  />
                 </Box>
                 <Timer handleStatusChange={() => handleStatusChange("Equipo_1")} setTiempo={setTiempoEquipo_1} setDndStatus={setDndStatus} id={"Equipo_1"}/>
                

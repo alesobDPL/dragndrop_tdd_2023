@@ -3,7 +3,7 @@ import NumberSelector from "./NumberSelector";
 import { Stack, Button, Grid } from "@chakra-ui/react";
 
 
-const Timer = ({ handleStatusChange, setTiempo, setDndStatus,id }) => {
+const Timer = ({ handleStatusChange, setTiempo}) => {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
@@ -18,8 +18,6 @@ const Timer = ({ handleStatusChange, setTiempo, setDndStatus,id }) => {
   
   const handleStartTimer = () => {
     setTiempo(`${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`)
-    setDndStatus()
-    console.log("despues de setear falso")
     setIsRunning(true);
   };
 
