@@ -37,8 +37,7 @@ export const sendEmailCliente = async (to) => {
 export const createLog = async (toast,equipoID, mascotaIDs,
                                 tiempoEjec,userID) => {
 
-    console.log("validando campos",equipoID, mascotaIDs,
-      tiempoEjec,userID)  
+ 
   
 
           
@@ -51,7 +50,16 @@ const response = await  addProceso({
 })
 const user = await getUser(userID)
 const mascota1 = await findMascota(mascotaIDs[0].id)
-const mascota2 = await findMascota(mascotaIDs[1].id)
+
+
+
+try {
+  const mascota2 = await findMascota(mascotaIDs[1].id);
+  sendEmailCliente(mascota2.data.dueñoEmail)
+}catch{
+
+}
+
 
 
 //console.log("email usuario",user.data.email)
@@ -61,7 +69,7 @@ const mascota2 = await findMascota(mascotaIDs[1].id)
 //Enviar emails 
 sendEmailUser(user.data.email)
 sendEmailCliente(mascota1.data.dueñoEmail)
-sendEmailCliente(mascota2.data.dueñoEmail)
+
 
 
 if(response.status == 200){

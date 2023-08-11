@@ -364,7 +364,7 @@ export function TrelloBoard({data}) {
                 <Box style={containerStyle} >
                   <Droppable id="Equipo_1" items={items["Equipo_1"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos } handleStatusChange={() => handleStatusChange("Equipo_1")}  />
                 </Box>
-                <Timer handleStatusChange={() => handleStatusChange("Equipo_1")} setTiempo={setTiempoEquipo_1} setDndStatus={setDndStatus} id={"Equipo_1"}/>
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_1")} setTiempo={setTiempoEquipo_1}  id={"Equipo_1"}/>
                
               </TabPanel>
               <TabPanel>

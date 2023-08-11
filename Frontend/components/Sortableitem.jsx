@@ -3,7 +3,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Box } from "@chakra-ui/react";
 
-const SortableItem = ({ item  }) => {
+const SortableItem = ({ item}) => {
 
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id   });
 
