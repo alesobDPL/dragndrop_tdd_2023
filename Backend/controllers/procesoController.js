@@ -3,8 +3,7 @@ const Equipo = require('../models/equipo');
 
 const createProceso = (req, res) => {
   const { equipo, mascota1, mascota2, tiempoEjecucion, user } = req.body;
-  console.log("dentro de createProceso en controller: ", equipo, mascota1, mascota2, tiempoEjecucion, user);
-
+  
   // Search for the equipo in the database based on its name
   Equipo.findOne({ nombre: equipo })
     .then((equipoDoc) => {
@@ -59,8 +58,10 @@ const getProcesos = (_req, res) => {
 const getProceso = (req, res) => {
   const { id } = req.params;
   Proceso.findById(id)
-    .populate('equipo')
-    .populate('user')
+  .populate('equipo')
+  .populate('user')
+  .populate('mascota1')
+  .populate('mascota2')
     .exec((err, proceso) => {
       if (err) {
         return res.status(400).send({ message: "Error al obtener el Proceso" });
@@ -96,8 +97,10 @@ const updateProceso = async (req, res) => {
       },
       { new: true }
     )
-      .populate('equipo')
-      .populate('user')
+    .populate('equipo')
+    .populate('user')
+    .populate('mascota1')
+    .populate('mascota2')
       .exec();
 
     if (!proceso) {
@@ -114,16 +117,18 @@ const updateProceso = async (req, res) => {
 const deleteProceso = (req, res) => {
   const { id } = req.params;
   Proceso.findByIdAndDelete(id)
-    .populate('equipo')
-    .populate('user')
-    .exec((err, proceso) => {
-      if (err) {
-        return res.status(400).send({ message: "Error al eliminar el Proceso" });
-      }
+  .populate('equipo')
+  .populate('user')
+  .populate('mascota1')
+  .populate('mascota2')
+    .then(proceso => {
       if (!proceso) {
         return res.status(404).send({ message: "Proceso no encontrado" });
       }
       return res.status(200).send(proceso);
+    })
+    .catch(err => {
+      return res.status(400).send({ message: "Error al eliminar el Proceso" });
     });
 };
 

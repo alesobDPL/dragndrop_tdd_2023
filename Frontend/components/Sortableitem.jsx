@@ -3,9 +3,11 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Box } from "@chakra-ui/react";
 
-const SortableItem = ({ item }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
+const SortableItem = ({ item,isDroppable }) => {
 
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id, disabled:false  });
+
+  console.log("sortableItem",isDroppable)
   const itemStyle = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -40,7 +42,7 @@ const SortableItem = ({ item }) => {
       </div>
       <div>
         <span style={typeStyle}>Tipo:</span> {item.pet_type}
-        <span style={typeStyle}> Peso:</span> {item.weight}
+        <span style={typeStyle}> Peso:</span> {item.weight}Kg
       </div>
     </Box>
   );

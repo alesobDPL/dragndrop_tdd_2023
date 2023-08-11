@@ -45,22 +45,6 @@ const Login = () => {
     }
   };
 
-
-
-  const sendEmail = async () => {
-    try {
-      await enviarEmail({
-        to: 'manuel.torres2001@alumnos.ubiobio.cl',
-        subject: 'Estado de mascota',
-        html: '<h1>Hola, su mascota se encuentra en estado "Para entrega" !</h1>',
-      });
-    } catch (error) {
-      console.error('Error sending email:', error);
-    }
-  };
-
-
-
   const containerStyle = { margin: 5} ;
 
   
@@ -81,7 +65,7 @@ const Login = () => {
         </label>
         <br/>
         <HStack align="center" justify="center">
-        <Button  colorScheme="whatsapp" type='submit'>Login</Button>
+        <Button  colorScheme="whatsapp" type='submit' margin={"20px"} alignContent={"center"}>Iniciar sesión</Button >
         </HStack>
       </form>
       <Flex align="center" justify="center">

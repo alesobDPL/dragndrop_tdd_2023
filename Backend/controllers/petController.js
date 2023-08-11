@@ -36,16 +36,16 @@ const getPetsInProceso = async (_req, res) => {
   }
 };
 
-const getPet = (req, res) => {
+const getPet = async (req, res) => {
   const ID = req.params.id;
-  Pet.findById(ID)
-    .exec((err, pet) => {
-      if (err) {
-        return res.status(400).send({ message: "Error al buscar el registro de la mascota" });
-      }
-      return res.status(200).send(pet);
-    });
+  try {
+    const pet = await Pet.findById(ID).exec();
+    return res.status(200).send(pet);
+  } catch (err) {
+    return res.status(400).send({ message: "Error al buscar el registro de la mascota" });
+  }
 };
+
 
 const delPet = (req, res) => {
   const ID = req.params.id;

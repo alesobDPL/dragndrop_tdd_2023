@@ -6,8 +6,6 @@ const createUser = async (req, res) => {
     const { username,role,email } = req.body;
     const password = bcrypt.hashSync(req.body.password, 10);
 
-    console.log(req.body)
-
     try {
         const user = await User.findOne({ username });
         
@@ -26,7 +24,6 @@ const createUser = async (req, res) => {
 
         return res.status(201).send(newUser);
     } catch (err) {
-        console.log(err)
         return res.status(400).send({ message: "Error al registrar el usuario" });
     }
 };

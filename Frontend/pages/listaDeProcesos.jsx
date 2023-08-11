@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Box, Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+import { Box, Table, Thead, Tbody, Tr, Th, Td,Button, useToast } from "@chakra-ui/react";
 import Navbar from "@/components/Navbar";
 import { getProcesos } from "@/data/proceso";
-import { getEquipos, UpdateEquipo } from "../data/equipo";
 import {checkToken} from "@/data/login"
+import {deleteLog} from "@/apiCall/proceso"
 
 
 export const getServerSideProps = async (context) => {
@@ -37,7 +37,8 @@ export const getServerSideProps = async (context) => {
 
 const ProcesosList = () => {
   const [procesos, setProcesos] = useState([]);
-  console.log("los procesos",procesos)
+  const toast = useToast();
+
 
   useEffect(() => {
     const fetchProcesos = async () => {
@@ -51,6 +52,9 @@ const ProcesosList = () => {
 
     fetchProcesos();
   }, []);
+
+
+
 
   return (
     <>
@@ -66,6 +70,7 @@ const ProcesosList = () => {
               <Th color="white">Mascota 1</Th>
               <Th color="white">Mascota 2</Th>
               <Th color="white">Operario</Th>
+              <Th color="white">Borrar registro</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -78,6 +83,11 @@ const ProcesosList = () => {
                 <Td>{proceso.mascota1.name}</Td>
                 <Td>{proceso.mascota2 ? proceso.mascota2.name : " - "}</Td>
                 <Td>{proceso.user.username}</Td>
+                <Td>
+                <Button onClick={() => deleteLog(toast, proceso._id)} colorScheme="red">
+                  Borrar
+                </Button>
+              </Td>
               </Tr>
             ))}
           </Tbody>

@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+import {DndContext,KeyboardSensor,PointerSensor,useSensor,useSensors} from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import Droppable from "../components/Droppable";
 import { arrayMove } from "../components/array";
@@ -31,8 +25,8 @@ export const getServerSideProps = async (context) => {
   }
 
   try {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET); // Replace with your actual secret key
-    const userData = decodedToken; // Use decoded token data as needed
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userData = decodedToken; 
     const check = await checkToken(token);
     
     if (check.status === 200) {
@@ -60,24 +54,32 @@ export function TrelloBoard({data}) {
     Equipo_5: []
   });
   const toast = useToast();
-  const capacidadMaxima = 2;
+  
+  const [tiempoEquipo_1, setTiempoEquipo_1] = useState("00:00:00");
+  const [tiempoEquipo_2, setTiempoEquipo_2] = useState("00:00:00");
+  const [tiempoEquipo_3, setTiempoEquipo_3] = useState("00:00:00");
+  const [tiempoEquipo_4, setTiempoEquipo_4] = useState("00:00:00");
+  const [tiempoEquipo_5, setTiempoEquipo_5] = useState("00:00:00");
 
-
-
-  const sendEmail = async ({to}) => {
-    try {
-      await enviarEmail({
-        to: {to},
-        subject: 'Estado de mascota',
-        html: '<h1>Hola, su mascota se encuentra en estado "Para entrega" !</h1>',
-      });
-    } catch (error) {
-      console.error('Error sending email:', error);
-    }
+  const equipoTiempo = {
+    Equipo_1: tiempoEquipo_1,
+    Equipo_2: tiempoEquipo_2,
+    Equipo_3: tiempoEquipo_3,
+    Equipo_4: tiempoEquipo_4,
+    Equipo_5 : tiempoEquipo_5
   };
 
+  const [dndStatus, setDndStatus] = useState({
+    Equipo_1: true,
+    Equipo_2: true,
+    Equipo_3: false,
+    Equipo_4: false,
+    Equipo_5: false,
+  })
+  
 
- 
+  const capacidadMaxima = 2;
+
 
   useEffect(() => {
     getMascotasEnProceso().then((res) => {
@@ -86,7 +88,7 @@ export function TrelloBoard({data}) {
         const updatedItems = {
           ...prevItems,
           Mascotas: mascotas.map((mascota, index) => ({
-            id: mascota._id, // Assign a unique id based on the index
+            id: mascota._id, 
             name: mascota.name,
             pet_type: mascota.pet_type, // Assuming pet_type contains the description
             pet_status: mascota.pet_status, // Assuming pet_status contains the status
@@ -105,8 +107,9 @@ export function TrelloBoard({data}) {
 
   
   const handleStatusChange = (columnId) => {
+
     // Check if any pets are selected
-    if (selectedPets.length === 0) {
+    if (items[columnId].length === 0) {
       toast({
         title: "Error",
         description: 'No hay mascotas seleccionadas.',
@@ -118,14 +121,11 @@ export function TrelloBoard({data}) {
     }
   
     // Create an array of pet IDs from the selected pets
-    const petIds = selectedPets.map((pet) => pet.id);
-  
     setItems((prevItems) => {
       const updatedItems = {
         ...prevItems,
         [columnId]: prevItems[columnId].map((item) => {
-          // Assuming each item has a unique pet ID stored in the 'id' property
-          const petId = item.id;
+     
           
           // Update the pet_status property for the specific pet
           return {
@@ -147,8 +147,8 @@ export function TrelloBoard({data}) {
       }); */
   
       // Create logs with selected pets
-      console.log("antes de createLog",columnId, petIds, "10 horas", data.sub)
-      createLog(toast,columnId, selectedPets, "10 horas", data.sub);
+      
+      createLog(toast,columnId, items[columnId], equipoTiempo[columnId], data.sub); 
   
       return updatedItems;
     }); 
@@ -283,15 +283,16 @@ export function TrelloBoard({data}) {
       if (itemWeight >= maxWeight) {
         // Show a warning message
         alert(
-          `The total weight of the items in this column cannot exceed ${maxWeight}kg.`
-        );
+          `The total weight of the items in this column cannot exceed ${maxWeight}kg.`);
 
         // Ask the user if they want to add the Mascota to the column anyway
         const confirm = window.confirm(
-          `Do you want to add the Mascota anyway? This will exceed the maximum weight.`
+          `Con esta mascota superas el peso maximo del equipo¿Deseas agregarla de todas maneras?`
         );
         if (confirm) {
           // Add the Mascota to the column
+          const selectedPet = items[activeContainer][activeIndex];
+          setSelectedPets([selectedPet]); // Set the selected pet as an array
           return {
             ...items,
             [activeContainer]: items[activeContainer].filter(
@@ -311,7 +312,7 @@ export function TrelloBoard({data}) {
   
         const activeItem = items[activeContainer][activeIndex];
   
-        // If dragging from "Mascotas" to "Equipo"
+        // If dragging from "Mascotas" to "Equipo".
         if (activeContainer === "Mascotas" && overContainer.startsWith("Equipo")) {
           const selectedPet = items[activeContainer][activeIndex];
           setSelectedPets([selectedPet]); // Set the selected pet as an array
@@ -363,27 +364,28 @@ export function TrelloBoard({data}) {
               <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_2")?.estado ===false}>Equipo 2</Tab>
               <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_3")?.estado ===false}>Equipo 3</Tab>
               <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_4")?.estado ===false}>Equipo 4</Tab>
+              <Tab isDisabled={equipos?.find((eq) => eq.nombre === "Equipo_5")?.estado ===false}>Equipo 5</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
                 <Box style={containerStyle} >
-                  <Droppable id="Equipo_1" items={items["Equipo_1"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos } handleStatusChange={() => handleStatusChange("Equipo_1")} />
+                  <Droppable id="Equipo_1" items={items["Equipo_1"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos } handleStatusChange={() => handleStatusChange("Equipo_1")} isDroppable={dndStatus["Equipo_1"]} />
                 </Box>
-                <Timer handleStatusChange={() => handleStatusChange("Equipo_1")} />
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_1")} setTiempo={setTiempoEquipo_1} setDndStatus={setDndStatus} id={"Equipo_1"}/>
                
               </TabPanel>
               <TabPanel>
                 <Box style={containerStyle}>
                   <Droppable id="Equipo_2" items={items["Equipo_2"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_2")} />
                 </Box>
-                <Timer handleStatusChange={() => handleStatusChange("Equipo_2")} />
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_2")} setTiempo={setTiempoEquipo_2}/>
                
               </TabPanel>
               <TabPanel>
                 <Box style={containerStyle}>
                   <Droppable id="Equipo_3" items={items["Equipo_3"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_3")} />
                 </Box>
-                <Timer handleStatusChange={() => handleStatusChange("Equipo_3")} />
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_3")} setTiempo={setTiempoEquipo_3} />
                
               </TabPanel>
               <TabPanel>
@@ -391,7 +393,14 @@ export function TrelloBoard({data}) {
                   <Droppable id="Equipo_4" items={items["Equipo_4"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_4")} />
                 </Box>
 
-                <Timer handleStatusChange={() => handleStatusChange("Equipo_4")} />
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_4")} setTiempo={setTiempoEquipo_4} />
+              </TabPanel>
+              <TabPanel>
+                <Box style={containerStyle}>
+                  <Droppable id="Equipo_5" items={items["Equipo_5"]} setItems={setItems} equipos={equipos} setEquipos={setEquipos} handleStatusChange={() => handleStatusChange("Equipo_5")} />
+                </Box>
+
+                <Timer handleStatusChange={() => handleStatusChange("Equipo_5")} setTiempo={setTiempoEquipo_5} />
               </TabPanel>
 
             </TabPanels>

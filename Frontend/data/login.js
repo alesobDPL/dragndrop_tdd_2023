@@ -28,11 +28,17 @@ const checkToken = async (token) => {
     });
     return response;
   };
+
+  const getUser = async (id) => {
+    const response = await axios.get(`${process.env.SERVIDOR}//user/search/${id}`)
+    return response
+}
   
 
 module.exports = {
     login,
     logout,
     checkToken,
-    checkTokenAdmin
+    checkTokenAdmin,
+    getUser
 }

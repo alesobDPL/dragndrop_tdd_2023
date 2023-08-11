@@ -5,7 +5,7 @@ import SortableItem from "./Sortableitem";
 import { Grid, Badge, Heading, Container, Flex} from "@chakra-ui/react";
 
 
-const Droppable = ({ id, items, setItems, equipos, setEquipos }) => {
+const Droppable = ({ id, items, setItems, equipos, setEquipos, isDroppable }) => {
   const { setNodeRef } = useDroppable({ id });
   const droppableStyle = {
     padding: "20px 10px",
@@ -30,13 +30,11 @@ const Droppable = ({ id, items, setItems, equipos, setEquipos }) => {
         <SortableContext id={id} items={items} strategy={rectSortingStrategy}>
           <Grid ref={setNodeRef} style={droppableStyle} alignItems="center" justifyContent="center">
             {items.map((item, index) => (
-              <SortableItem key={item.id} item={item} index={index} />
+              <SortableItem key={item.id} item={item} index={index} isDroppable={isDroppable} />
             ))}
           </Grid>
         </SortableContext>
-        
       </Container>
-      
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Switch, Box, Flex, Heading, Text, useToast } from "@chakra-ui/react";
+import { Switch, Box, Tr, Thead,Th,Tbody,Td, Table, useToast } from "@chakra-ui/react";
 import Navbar from "@/components/Navbar";
 import { getEquipos, UpdateEquipo } from "../data/equipo";
 import {checkTokenAdmin} from "@/data/login"
@@ -93,24 +93,40 @@ const EquiposList = () => {
 
   return (
     <>
-    <Navbar/>
-    <Box p={4} borderRadius="md" borderWidth="1px" borderColor="gray.200">
-      <Heading size="lg" mb={4}>
-        Equipos
-      </Heading>
-      {equipos.map((equipo) => (
-        <Flex key={equipo._id} alignItems="center" justifyContent="space-between" mb={2}>
-          <Text fontWeight="bold">{equipo.nombre}</Text>
-          <Switch
+      <Navbar />
+      <Box mt={6}>
+        <Table variant="striped" colorScheme="green">
+          <Thead bg="green.300">
+            <Tr>
+              <Th color="white">  N°</Th>
+              <Th color="white">Equipo</Th>
+              <Th color="white">¿Estado?</Th>
+              <Th color="white">Activar o desactivar equipo</Th>
+
+            </Tr>
+          </Thead>
+          <Tbody>
+            {equipos.map((equipo, index) => (
+              <Tr key={equipo._id}>
+                <Td>{index + 1}</Td>
+                <Td>{equipo.nombre}</Td>
+                <Td>{equipo.estado ? "Activo":"Inactivo"}</Td>
+                
+                <Td>
+                <Switch
             size="lg"
             isChecked={equipo.estado}
             onChange={() => handleToggleEquipo(equipo)}
             colorScheme="green"
           />
-        </Flex>
-      ))}
-    </Box>
+              </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
     </>
+    
   );
 };
 
